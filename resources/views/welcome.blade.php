@@ -8,5 +8,6 @@
 </head>
 <body>
 <div id="app"></div>
+<script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 </body>
 </html>

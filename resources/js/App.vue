@@ -1,11 +1,14 @@
 <template>
     <div>
-        <h1>Hello Vue + Laravel!</h1>
+        <Whiteboard/>
     </div>
 </template>
 
 <script>
+import Whiteboard from "./components/Whiteboard.vue";
+
 export default {
     name: 'App',
+    components: {Whiteboard},
 };
 </script>
