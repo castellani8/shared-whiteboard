@@ -44,16 +44,12 @@ export default {
             minDistance: 2,
             incomingStrokes: new Map(),
             isMouseDown: false,
+            token: Math.random().toString(36).slice(2)
         };
     },
     mounted() {
         this.initializeCanvas();
         this.initializePusher();
-
-        if (!localStorage.getItem('token')) {
-            localStorage.setItem('token', Math.random().toString(36).slice(2));
-        }
-
         this.loadWhiteboardState();
     },
     methods: {
@@ -72,13 +68,13 @@ export default {
             const channel = pusher.subscribe(`whiteboard.${this.$route.params.pass}`);
 
             channel.bind('stroke.chunk', (data) => {
-                if (data.token !== localStorage.getItem('token')) {
+                if (data.token !== this.token) {
                     this.handleRemoteStrokeChunk(data);
                 }
             });
 
             channel.bind('whiteboard.cleared', (data) => {
-                if (data.token !== localStorage.getItem('token')) {
+                if (data.token !==  this.token) {
                     this.performClear();
                 }
             });
@@ -155,7 +151,7 @@ export default {
         },
 
         generateStrokeId() {
-            return `${localStorage.getItem('token')}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+            return `${this.token}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
         },
 
         getPoint(event) {
@@ -262,7 +258,7 @@ export default {
                 try {
                     await axios.post('/api/stroke', {
                         strokeId: this.currentStrokeId,
-                        token: localStorage.getItem('token'),
+                        token: this.token,
                         pass: this.$route.params.pass,
                         points: this.points,
                         color: this.currentColor,
@@ -285,13 +281,11 @@ export default {
         },
 
         clearCanvas() {
-            // Perform local clear
             this.performClear();
 
-            // Send clear event with our token
             axios.post('/api/clear-whiteboard', {
                 pass: this.$route.params.pass,
-                token: localStorage.getItem('token')
+                token: this.token
             }).catch(error => {
                 console.error('Error clearing whiteboard:', error);
             });
