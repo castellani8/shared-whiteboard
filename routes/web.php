@@ -1,14 +1,16 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DrawingController;
 
 Route::get('/', function () {
     return view('whiteboard');
 });
 
-Route::get('/{any}', function () {
-    return view('whiteboard'); // Certifique-se de que esta view carrega o Vue App
+Route::get('/whiteboard/{any}', function () {
+    return view('whiteboard');
 })->where('any', '.*');
 
-Route::post('/api/drawing', [\App\Http\Controllers\DrawingController::class, 'broadcastDrawing']);
-Route::post('/api/stroke-end', [\App\Http\Controllers\DrawingController::class, 'broadcastStrokeEnd']);
+Route::post('api/stroke', [DrawingController::class, 'saveStroke']);
+Route::get('api/whiteboard/{pass}', [DrawingController::class, 'getWhiteboardState']);
+Route::post('api/clear-whiteboard', [DrawingController::class, 'clearWhiteboard']);
