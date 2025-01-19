@@ -1,14 +1,11 @@
 <template>
     <div>
-        <Whiteboard/>
+        <router-view></router-view>
     </div>
 </template>
 
 <script>
-import Whiteboard from "./components/Whiteboard.vue";
-
 export default {
     name: 'App',
-    components: {Whiteboard},
 };
 </script>
